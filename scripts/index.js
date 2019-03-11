@@ -5,9 +5,10 @@ function getLocationName(weather) {
   const city = new Map();
   const cityValues = Object.values(weather); // array of city values
   const cityName = document.querySelector("[data-city]");
-  cityName.textContent = `city name: ${cityValues[10]}`;
+  cityName.textContent = `city name: ${cityValues[11]}`;
   body.appendChild(cityName);
-  return cityValues[10]; //city name is in index 10
+  console.log(cityValues);
+  return cityValues[11]; //city name is in index 10
 }
 
 function getLocationCountry(weather) {
@@ -45,15 +46,12 @@ const aDiv = document.createElement("div");
 const body = document.querySelector("body");
 body.appendChild(aDiv);
 
-getLocationName(atlWeather);
-getLocationTemp(atlWeather);
-getWindSpeed(atlWeather);
-showIcon(returnURL(atlWeather));
-showMap(atlWeather);
-
-function returnURL(weather) {
+function returnURL(theWeather) {
   // console.log(weather.weather[0].icon); //log the name of the icon
-  const URL = `http://openweathermap.org/img/w/${weather.weather[0].icon}.png`;
+  // const URL = `http://openweathermap.org/img/w/${weather.weather[0].icon}.png`;
+  const URL = `http://openweathermap.org/img/w/${
+    theWeather.weather[0].icon
+  }.png`;
   return URL;
 }
 function showIcon(iconURL) {
@@ -70,6 +68,29 @@ function showMap(weather) {
   const mapURL = `http://maps.google.com/maps?q=${lat},${long}&z=15&output=embed`;
   iFrameMap.setAttribute("src", mapURL);
 }
+
+let theWeather;
+const theURL =
+  "https://api.openweathermap.org/data/2.5/weather?q=Atlanta,%20US&appid=35df3ce6d5649c7521f37314c74e69cc";
+fetch(theURL)
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(theWeather) {
+    console.log(`this logs theWeather: ${theWeather}`);
+    console.log(theWeather);
+    console.log(
+      `this logs theWeather's icon location: ${theWeather.weather[0].icon}.png`
+    );
+    return theWeather;
+  })
+  .then(function(noReallyTheWeatherData) {
+    getLocationName(noReallyTheWeatherData);
+    getLocationTemp(noReallyTheWeatherData);
+    getWindSpeed(noReallyTheWeatherData);
+    showIcon(returnURL(noReallyTheWeatherData));
+    showMap(noReallyTheWeatherData);
+  });
 
 // weather.weather.icon => "01d"
 // http://openweathermap.org/img/w/10d.png
